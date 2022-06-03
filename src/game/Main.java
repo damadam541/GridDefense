@@ -31,6 +31,8 @@ public class Main extends JFrame implements ActionListener {
 	int wave = 1;
 
 	ArrayList<Enemies> enemies = new ArrayList<Enemies>();
+	
+	ArrayList<Maps> nodes = new ArrayList<Maps>();
 
 	public static void main(String[] args) {
 		new Main();
@@ -60,8 +62,18 @@ public class Main extends JFrame implements ActionListener {
 	}
 
 	void lvl1() {
-		int xNode = 0;
-		int yNode = 0;
+		nodes.add(new Maps(0,5));
+		nodes.add(new Maps(3,5));
+		nodes.add(new Maps(3,2));
+		nodes.add(new Maps(6,2));
+		nodes.add(new Maps(6,7));
+		nodes.add(new Maps(9,7));
+		nodes.add(new Maps(9,9));
+		nodes.add(new Maps(2,9));
+		nodes.add(new Maps(2,13));
+		nodes.add(new Maps(15,13));
+		
+		
 		field[0][5] = pathStart;
 		for (int i = 1 ; i < 3 ; i++) {
 			field[i][5] = path;
