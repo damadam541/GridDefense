@@ -31,7 +31,7 @@ public class Main extends JFrame implements ActionListener {
 	int wave = 1;
 
 	ArrayList<Enemies> enemies = new ArrayList<Enemies>();
-	
+
 	ArrayList<Maps> nodes = new ArrayList<Maps>();
 
 	public static void main(String[] args) {
@@ -62,6 +62,7 @@ public class Main extends JFrame implements ActionListener {
 	}
 
 	void lvl1() {
+		//When creating new maps, DO NOT MAKE DIAGONAL PATHS
 		nodes.add(new Maps(0,5));
 		nodes.add(new Maps(3,5));
 		nodes.add(new Maps(3,2));
@@ -72,37 +73,57 @@ public class Main extends JFrame implements ActionListener {
 		nodes.add(new Maps(2,9));
 		nodes.add(new Maps(2,13));
 		nodes.add(new Maps(15,13));
-		
-		
-		field[0][5] = pathStart;
-		for (int i = 1 ; i < 3 ; i++) {
-			field[i][5] = path;
+
+		field[nodes.get(0).xNode][nodes.get(0).yNode] = pathStart;
+
+		for (int i = 1 ; i < nodes.size() ; i++) field[nodes.get(i).xNode][nodes.get(i).yNode] = path;
+
+		for (int i = 0 ; i < nodes.size() ; i++) {
+			try {
+				Maps node1 = nodes.get(i);
+				Maps node2 = nodes.get(i+1);
+
+				int xRange = node2.xNode-node1.xNode;
+				int yRange = node2.yNode-node1.yNode;
+
+				int xPath = 0;
+				int yPath = 0;
+
+				System.out.println(xRange);
+				System.out.println(yRange);
+
+				if (yRange == 0) {
+					yPath = node1.yNode;
+					if (xRange < 0) {
+						for (int x = node2.xNode ; x < Math.abs(xRange)+node2.xNode ; x++) {
+							field[x][yPath] = path;
+						}
+					}
+					if (xRange > 0) {
+						for (int x = node1.xNode+1 ; x < xRange+node1.xNode ; x++) {
+							field[x][yPath] = path;
+						}
+					}
+				}
+				if (xRange == 0) {
+					xPath = node1.xNode;
+					if (yRange < 0) {
+						for (int y = node2.yNode ; y < Math.abs(yRange)+node2.yNode ; y++) {
+							field[xPath][y] = path;
+						}
+					}
+					if (yRange > 0) {
+						for (int y = node1.yNode+1 ; y < yRange+node1.yNode ; y++) {
+							field[xPath][y] = path;
+						}
+					}
+				}
+
+			} catch (IndexOutOfBoundsException e) {
+				break;
+			}
 		}
-		for (int i = 5 ; i > 1 ; i--) {
-			field[3][i] = path;
-		}
-		for (int i = 3 ; i < 7 ; i++) {
-			field[i][2] = path;
-		}
-		for (int i = 2 ; i < 8 ; i++) {
-			field[6][i] = path;
-		}
-		for (int i = 6 ; i < 9 ; i++) {
-			field[i][7] = path;
-		}
-		for (int i = 7 ; i < 10 ; i++) {
-			field[9][i] = path;
-		}
-		for (int i = 9 ; i > 1 ; i--) {
-			field[i][9] = path;
-		}
-		for (int i = 9 ; i < 14 ; i++) {
-			field[2][i] = path;
-		}
-		for (int i = 2 ; i < 15 ; i++) {
-			field[i][13] = path;
-		}
-		field[15][13] = pathEnd;
+		field[nodes.get(nodes.size()-1).xNode][nodes.get(nodes.size()-1).yNode] = pathEnd;
 	}
 
 	void moveEnemies(int i) {
@@ -113,10 +134,10 @@ public class Main extends JFrame implements ActionListener {
 		int width = temp.width;
 		int height = temp.height;
 
-		if (x < 3*boxW+(boxW/2)-(enemies.get(i).width/2)) x = x + v;
+		if (x < 3*boxW+(boxW/2)-(temp.width/2)) x = x + v;
 
-		enemies.get(i).x = x;
-		enemies.get(i).y = y;
+		temp.x = x;
+		temp.y = y;
 	}
 
 	private class PlayingField extends JPanel {
