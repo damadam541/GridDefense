@@ -30,9 +30,12 @@ public class Main extends JFrame implements ActionListener {
 
 	int wave = 1;
 
+	Object[] options = {"Level 1","Level 2","Level 3"};
+	int lvl = 0;
+
 	ArrayList<Enemies> enemies = new ArrayList<Enemies>();
 
-	ArrayList<Maps> nodes = new ArrayList<Maps>();
+	static ArrayList<Maps> nodes = new ArrayList<Maps>();
 
 	public static void main(String[] args) {
 		new Main();
@@ -61,22 +64,13 @@ public class Main extends JFrame implements ActionListener {
 		boxH = (int) ((WIN/SIZE) + 0.5);
 	}
 
-	void lvl1() {
-		//When creating new maps, DO NOT MAKE DIAGONAL PATHS
-		nodes.add(new Maps(0,5));
-		nodes.add(new Maps(3,5));
-		nodes.add(new Maps(3,2));
-		nodes.add(new Maps(6,2));
-		nodes.add(new Maps(6,7));
-		nodes.add(new Maps(9,7));
-		nodes.add(new Maps(9,9));
-		nodes.add(new Maps(2,9));
-		nodes.add(new Maps(2,13));
-		nodes.add(new Maps(15,13));
+	void createMap() {
+
+		if (lvl == 0) Maps.lvl1();
+		if (lvl == 1) Maps.lvl2();
+		if (lvl == 2) Maps.lvl3();
 
 		field[nodes.get(0).xNode][nodes.get(0).yNode] = pathStart;
-
-		for (int i = 1 ; i < nodes.size() ; i++) field[nodes.get(i).xNode][nodes.get(i).yNode] = path;
 
 		for (int i = 0 ; i < nodes.size() ; i++) {
 			try {
@@ -89,18 +83,15 @@ public class Main extends JFrame implements ActionListener {
 				int xPath = 0;
 				int yPath = 0;
 
-				System.out.println(xRange);
-				System.out.println(yRange);
-
 				if (yRange == 0) {
 					yPath = node1.yNode;
 					if (xRange < 0) {
-						for (int x = node2.xNode ; x < Math.abs(xRange)+node2.xNode ; x++) {
+						for (int x = node2.xNode ; x <= Math.abs(xRange)+node2.xNode ; x++) {
 							field[x][yPath] = path;
 						}
 					}
 					if (xRange > 0) {
-						for (int x = node1.xNode+1 ; x < xRange+node1.xNode ; x++) {
+						for (int x = node1.xNode+1 ; x <= xRange+node1.xNode ; x++) {
 							field[x][yPath] = path;
 						}
 					}
@@ -108,12 +99,12 @@ public class Main extends JFrame implements ActionListener {
 				if (xRange == 0) {
 					xPath = node1.xNode;
 					if (yRange < 0) {
-						for (int y = node2.yNode ; y < Math.abs(yRange)+node2.yNode ; y++) {
+						for (int y = node2.yNode ; y <= Math.abs(yRange)+node2.yNode ; y++) {
 							field[xPath][y] = path;
 						}
 					}
 					if (yRange > 0) {
-						for (int y = node1.yNode+1 ; y < yRange+node1.yNode ; y++) {
+						for (int y = node1.yNode+1 ; y <= yRange+node1.yNode ; y++) {
 							field[xPath][y] = path;
 						}
 					}
@@ -131,21 +122,43 @@ public class Main extends JFrame implements ActionListener {
 		int x = temp.x;
 		int y = temp.y;
 		int v = temp.v;
-		int width = temp.width;
-		int height = temp.height;
+		int currentNode = temp.currentNode;
+		int xNode = nodes.get(currentNode).xNode*boxW+(boxW/2)-(enemies.get(i).height/2);
+		int yNode = nodes.get(currentNode).yNode*boxH+(boxH/2)-(enemies.get(i).width/2);
 
-		if (x < 3*boxW+(boxW/2)-(temp.width/2)) x = x + v;
+		if (x < xNode) {
+			x = x + v;
+		}
+		if (x > xNode) {
+			x = x - v;
+		}
+
+		if (y < yNode) {
+			y = y + v;
+		}
+		if (y > yNode) {
+			y = y - v;
+		}
+
+		if (x > xNode-5 && x < xNode+5) {
+			if (y > yNode-5 && y < yNode+5) temp.currentNode++;
+		}
 
 		temp.x = x;
 		temp.y = y;
+	}
+
+	void levelSelect() {
+		lvl = JOptionPane.showOptionDialog(null,"Choose a level","Level Selector",JOptionPane.YES_NO_CANCEL_OPTION , JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
 	}
 
 	private class PlayingField extends JPanel {
 
 		PlayingField(){
 			this.setBackground(Color.BLACK); //light gray
+			levelSelect();
 			initBox();
-			lvl1();
+			createMap();
 			new Spawn().start();
 		}
 
@@ -188,7 +201,8 @@ public class Main extends JFrame implements ActionListener {
 			}
 
 			for (int i = 0 ; i < enemies.size() ; i++) {
-				g2.fillRect(enemies.get(i).x,enemies.get(i).y,enemies.get(i).width,enemies.get(i).height);
+				Enemies temp = enemies.get(i);
+				g2.fillRect(temp.x,temp.y,temp.width,temp.height);
 			}
 
 		}
@@ -216,13 +230,19 @@ public class Main extends JFrame implements ActionListener {
 				for (int x = 0 ; x < SIZE ; x++) {
 					for (int y = 0 ; y < SIZE ; y++) {
 						if (field[x][y] == pathStart) {
-							spawnX = x*boxW-boxW;
-							spawnY = y*boxW+(boxW/2);
+							if (y == 0 && field[x][y+1] == path) {
+								spawnX = x*boxW+(boxH/2);
+								spawnY = y*boxH+(boxW/2)-boxH;
+							}
+							if (x == 0 && field[x+1][y] == path) {
+								spawnY = y*boxH+(boxW/2);
+								spawnX = x*boxW+(boxH/2)-boxW;
+							}
 						}
 					}
 				}
 				if (wave == 1) {
-					enemies.add(new Enemies(spawnX,spawnY,"small"));
+					enemies.add(new Enemies(spawnX,spawnY,"medium"));
 				}
 			}
 		}

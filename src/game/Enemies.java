@@ -7,6 +7,7 @@ public class Enemies extends Rectangle {
 	int width;
 	int height;
 	int v;
+	int currentNode = 1;
 	
 	int[][] visited = new int[Main.SIZE][Main.SIZE];
 
@@ -21,6 +22,16 @@ public class Enemies extends Rectangle {
 			width = 10;
 			height = 10;
 			v = 1;
+		}
+		if (type.equals("medium")) {
+			width = 15;
+			height = 15;
+			v = 2;
+		}
+		if (type.equals("large")) {
+			width = 20;
+			height = 20;
+			v = 4;
 		}
 	}
 	
