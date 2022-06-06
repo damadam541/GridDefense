@@ -149,7 +149,7 @@ public class Main extends JFrame implements ActionListener {
 	}
 
 	void levelSelect() {
-		lvl = JOptionPane.showOptionDialog(null,"Choose a level","Level Selector",JOptionPane.YES_NO_CANCEL_OPTION , JOptionPane.QUESTION_MESSAGE, null, options, options[2]);
+		lvl = JOptionPane.showOptionDialog(null,"Choose a level","Level Selector",JOptionPane.YES_NO_CANCEL_OPTION , JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
 	}
 
 	private class PlayingField extends JPanel {
