@@ -1,4 +1,5 @@
 package game;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -33,6 +34,7 @@ public class Main extends JFrame implements ActionListener {
 	Object[] options = {"Level 1","Level 2","Level 3"};
 	int lvl = 0;
 
+	Player player;
 	ArrayList<Enemies> enemies = new ArrayList<Enemies>();
 
 	static ArrayList<Maps> nodes = new ArrayList<Maps>();
@@ -49,6 +51,9 @@ public class Main extends JFrame implements ActionListener {
 
 		gamePanel = new PlayingField();
 		this.add(gamePanel);
+		
+		player = new Player();
+		this.add(player, BorderLayout.EAST);
 
 		gamePanel.setPreferredSize(new Dimension(WIN,WIN));
 		this.pack();
