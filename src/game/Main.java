@@ -23,15 +23,14 @@ public class Main extends JFrame implements ActionListener {
 	private int boxW, boxH;
 
 	Timer timer;
-	final int timerSpeed = 1;
+	final int timerSpeed = 17;
 
 	final static int path = 1;
 	final static int pathStart = 2;
 	final static int pathEnd = -1;
 
 	int wave = 1;
-
-	Object[] options = {"Level 1","Level 2","Level 3"};
+	
 	int lvl = 0;
 
 	Player player;
@@ -145,8 +144,13 @@ public class Main extends JFrame implements ActionListener {
 			y = y - v;
 		}
 
-		if (x > xNode-5 && x < xNode+5) {
-			if (y > yNode-5 && y < yNode+5) temp.currentNode++;
+		if (x > xNode-10 && x < xNode+10) {
+			if (y > yNode-10 && y < yNode+10) 
+				if (temp.currentNode < nodes.size()-1) temp.currentNode++;
+				else {
+					enemies.remove(temp);
+					removeHealth();
+				}
 		}
 
 		temp.x = x;
@@ -154,7 +158,13 @@ public class Main extends JFrame implements ActionListener {
 	}
 
 	void levelSelect() {
+		Object[] options = {"The Gate","[Insert Name]","[Insert Name]"};
 		lvl = JOptionPane.showOptionDialog(null,"Choose a level","Level Selector",JOptionPane.YES_NO_CANCEL_OPTION , JOptionPane.INFORMATION_MESSAGE, null, options, options[2]);
+		if (lvl == -1) System.exit(0);
+	}
+	
+	void removeHealth() {
+		System.out.println("Ouchie!");
 	}
 
 	private class PlayingField extends JPanel {
@@ -247,7 +257,7 @@ public class Main extends JFrame implements ActionListener {
 					}
 				}
 				if (wave == 1) {
-					enemies.add(new Enemies(spawnX,spawnY,"medium"));
+					enemies.add(new Enemies(spawnX,spawnY,"small"));
 				}
 			}
 		}

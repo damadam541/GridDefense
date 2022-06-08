@@ -4,12 +4,10 @@ import java.awt.Rectangle;
 public class Enemies extends Rectangle {
 	int x;
 	int y;
-	int width;
-	int height;
+	final int width = 20;
+	final int height = 20;
 	int v;
 	int currentNode = 1;
-	
-	int[][] visited = new int[Main.SIZE][Main.SIZE];
 
 	Enemies(int x, int y, String type){
 		this.x = x;
@@ -19,19 +17,16 @@ public class Enemies extends Rectangle {
 	
 	void setEnemyType(String type) {
 		if (type.equals("small")) {
-			width = 10;
-			height = 10;
-			v = 1;
+			v = 4;
 		}
 		if (type.equals("medium")) {
-			width = 15;
-			height = 15;
-			v = 2;
+			v = 3;
 		}
 		if (type.equals("large")) {
-			width = 20;
-			height = 20;
-			v = 4;
+			v = 2;
+		}
+		if (type.equals("fast")) {
+			v = 8;
 		}
 	}
 	
