@@ -19,8 +19,10 @@ public class Player extends JPanel {
         this.setBackground(Color.GRAY);
         this.setPreferredSize(new Dimension(200, 720));
         this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
+        
+        
+        
         this.setVisible(true);
-
     }
 }
 
