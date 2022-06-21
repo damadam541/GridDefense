@@ -1,8 +1,5 @@
 package game;
 
-<<<<<<< HEAD
-public class Tower {
-=======
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.util.ArrayList;
@@ -28,6 +25,5 @@ public class Tower extends Rectangle {
 		
 		
 	}
->>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 
 }

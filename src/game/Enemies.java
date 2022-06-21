@@ -1,38 +1,49 @@
 package game;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 public class Enemies extends Rectangle {
 	int x;
 	int y;
-	int width;
-	int height;
+	final int width = 20;
+	final int height = 20;
 	int v;
+	int health;
 	int currentNode = 1;
-	
-	int[][] visited = new int[Main.SIZE][Main.SIZE];
 
-	Enemies(int x, int y, String type){
+	Enemies(int x, int y){
 		this.x = x;
 		this.y = y;
-		setEnemyType(type);
 	}
 	
-	void setEnemyType(String type) {
-		if (type.equals("small")) {
-			width = 10;
-			height = 10;
-			v = 1;
+	int moveEnemies(ArrayList<Maps> nodes, int boxW, int boxH, int enemyIndex) {
+		int xNode = nodes.get(currentNode).xNode*boxW+(boxW/2)-(height/2);
+		int yNode = nodes.get(currentNode).yNode*boxH+(boxH/2)-(width/2);
+
+		if (x < xNode) {
+			x = x + v;
 		}
-		if (type.equals("medium")) {
-			width = 15;
-			height = 15;
-			v = 2;
+		if (x > xNode) {
+			x = x - v;
 		}
-		if (type.equals("large")) {
-			width = 20;
-			height = 20;
-			v = 4;
+
+		if (y < yNode) {
+			y = y + v;
 		}
+		if (y > yNode) {
+			y = y - v;
+		}
+
+		if (x > xNode-10 && x < xNode+10) {
+			if (y > yNode-10 && y < yNode+10) 
+				if (currentNode < nodes.size()-1) currentNode++;
+				else {
+					return enemyIndex;
+				}
+		}
+		
+		return -1;
+
 	}
 	
 }

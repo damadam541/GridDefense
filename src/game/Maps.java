@@ -3,17 +3,19 @@ package game;
 import java.util.ArrayList;
 
 public class Maps {
-	static ArrayList<Maps> nodes = Main.nodes;
+
 	int xNode;
 	int yNode;
+	
 
 	Maps(int xNode, int yNode) {
 		this.xNode = xNode;
 		this.yNode = yNode;
 	}
+	
+	// When creating new maps, DO NOT MAKE NODES THAT CONNECT DIAGONALLY
 
-	static void lvl1() {
-		// When creating new maps, DO NOT MAKE DIAGONAL PATHS
+	static void lvl1(ArrayList<Maps> nodes) {
 		nodes.add(new Maps(0, 5));
 		nodes.add(new Maps(3, 5));
 		nodes.add(new Maps(3, 2));
@@ -26,7 +28,7 @@ public class Maps {
 		nodes.add(new Maps(15, 13));
 	}
 
-	static void lvl2() {
+	static void lvl2(ArrayList<Maps> nodes) {
 		nodes.add(new Maps(0, 12));
 		nodes.add(new Maps(4, 12));
 		nodes.add(new Maps(4, 8));
@@ -43,7 +45,7 @@ public class Maps {
 		nodes.add(new Maps(14, 0));
 	}
 
-	static void lvl3() {
+	static void lvl3(ArrayList<Maps> nodes) {
 		nodes.add(new Maps(5, 0));
 		nodes.add(new Maps(5, 10));
 	}
