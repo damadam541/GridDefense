@@ -4,7 +4,7 @@ public class SmallEnemies extends Enemies{
 
 	SmallEnemies(int x, int y) {
 		super(x, y);
-		v = 3;
+		v = 2;
 		health = 50;
 	}
 

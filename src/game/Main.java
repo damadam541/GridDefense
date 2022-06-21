@@ -32,13 +32,13 @@ public class Main extends JFrame implements ActionListener {
 	final static int pathStart = 2;
 	final static int pathEnd = -1;
 
-	int wave = 3;
+	int wave = 1;
 
 	int lvl = 0;
 
 	Player player;
 
-	ArrayList<Enemies> enemies = new ArrayList<Enemies>();
+	static ArrayList<Enemies> enemies = new ArrayList<Enemies>();
 
 	static ArrayList<Maps> nodes = new ArrayList<Maps>();
 
@@ -46,8 +46,6 @@ public class Main extends JFrame implements ActionListener {
 
 	int cursorPosX = 0;
 	int cursorPosY = 0;
-	
-	Rectangle radius;
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
@@ -178,6 +176,7 @@ public class Main extends JFrame implements ActionListener {
 			initBox();
 			createMap();
 			new Spawn().start();
+			new Shoot().start();
 		}
 
 		@Override
@@ -227,22 +226,24 @@ public class Main extends JFrame implements ActionListener {
 			}
 
 			//Draw Tower
-			for (int i = 0 ; i < towers.size() ; i++) {
-				Tower temp = towers.get(i);
-				g2.fillRect(temp.x,temp.y,temp.width,temp.height);
-
-				if (cursorPosX >= temp.x && cursorPosX <= temp.x+temp.width && cursorPosY >= temp.y && cursorPosY <= temp.y+temp.height) {
+			for (Tower t : towers) {
+				g2.rotate(t.angle,t.x+t.width/2,t.y+t.height/2);
+				g2.fillRect(t.x,t.y,t.width,t.height);
+				//TODO Remove this later
+				g2.setColor(Color.RED);
+				g2.fillRect(t.x,t.y,5,5);
+				
+				g2.rotate(-t.angle,t.x+t.width/2,t.y+t.height/2);
+				if (cursorPosX >= t.x && cursorPosX <= t.x+t.width && cursorPosY >= t.y && cursorPosY <= t.y+t.height) {
 					g2.setColor(new Color(50,50,50,100));
-					g2.fillRect(temp.x-(temp.range/2-temp.width/2), temp.y-(temp.range/2-temp.height/2), temp.range, temp.range);
-				} 
+					g2.fill(t.radius);
+				}
 			}
 
 		}
 
 		@Override
-		public void mouseClicked(MouseEvent e) {
-			
-		}
+		public void mouseClicked(MouseEvent e) {}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
@@ -254,19 +255,13 @@ public class Main extends JFrame implements ActionListener {
 		}
 
 		@Override
-		public void mouseReleased(MouseEvent e) {
-
-		}
+		public void mouseReleased(MouseEvent e) {}
 
 		@Override
-		public void mouseEntered(MouseEvent e) {
-
-		}
+		public void mouseEntered(MouseEvent e) {}
 
 		@Override
-		public void mouseExited(MouseEvent e) {
-
-		}
+		public void mouseExited(MouseEvent e) {}
 
 	}
 
@@ -275,20 +270,22 @@ public class Main extends JFrame implements ActionListener {
 		System.out.println("Ouchies");
 		enemies.remove(enemyIndex);
 	}
+	
+	void deleteEnemy(int i) {
+		enemies.remove(i);
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//
+		//Move the enemies and check if they reach the endpoint or get to 0 health
 		for (int i = 0 ; i < enemies.size() ; i++) {
 			int enemyIndex = enemies.get(i).moveEnemies(nodes,boxW,boxH,i);
 			if (enemyIndex >= 0) removeHealth(enemyIndex);
+			if (enemies.get(i).health == 0) deleteEnemy(i);
 		}
 
 		//TODO find out how to create indivdual firerates
-		for (Tower t : towers) {
-			t.shoot(enemies);
-		}
-
+		
 
 		gamePanel.repaint();
 	}
@@ -318,7 +315,23 @@ public class Main extends JFrame implements ActionListener {
 					}
 				}
 				//TODO DEBUG remove later
-				enemies.add(new BigEnemies(spawnX,spawnY));
+				enemies.add(new MediumEnemies(spawnX,spawnY));
+			}
+		}
+	}
+	
+	class Shoot extends Thread {
+		
+		int firerate;
+		
+		public void run() {
+			while (true) {
+				for (Tower t : towers) {
+					t.shoot(enemies);
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {}
 			}
 		}
 	}
