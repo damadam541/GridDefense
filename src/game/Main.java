@@ -36,10 +36,23 @@ public class Main extends JFrame implements ActionListener {
 	int lvl = 0;
 
 	Player player;
+<<<<<<< HEAD
 	ArrayList<Enemies> enemies = new ArrayList<Enemies>();
+=======
+
+	static ArrayList<Enemies> enemies = new ArrayList<Enemies>();
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 
 	static ArrayList<Maps> nodes = new ArrayList<Maps>();
 
+<<<<<<< HEAD
+=======
+	ArrayList<Tower> towers = new ArrayList<Tower>();
+
+	int cursorPosX = 0;
+	int cursorPosY = 0;
+
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 	public static void main(String[] args) {
 		new Main();
 	}
@@ -171,6 +184,7 @@ public class Main extends JFrame implements ActionListener {
 			initBox();
 			createMap();
 			new Spawn().start();
+			new Shoot().start();
 		}
 
 		@Override
@@ -213,20 +227,88 @@ public class Main extends JFrame implements ActionListener {
 
 			for (int i = 0; i < enemies.size(); i++) {
 				Enemies temp = enemies.get(i);
+<<<<<<< HEAD
 				g2.fillRect(temp.x, temp.y, temp.width, temp.height);
+=======
+				g2.fillRect(temp.x,temp.y,temp.width,temp.height);
+			}
+
+			//Draw Tower
+			for (Tower t : towers) {
+				g2.rotate(t.angle,t.x+t.width/2,t.y+t.height/2);
+				g2.fillRect(t.x,t.y,t.width,t.height);
+				//TODO Remove this later
+				g2.setColor(Color.RED);
+				g2.fillRect(t.x,t.y,5,5);
+				
+				g2.rotate(-t.angle,t.x+t.width/2,t.y+t.height/2);
+				if (cursorPosX >= t.x && cursorPosX <= t.x+t.width && cursorPosY >= t.y && cursorPosY <= t.y+t.height) {
+					g2.setColor(new Color(50,50,50,100));
+					g2.fill(t.radius);
+				}
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 			}
 
 		}
 
+<<<<<<< HEAD
+=======
+		@Override
+		public void mouseClicked(MouseEvent e) {}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			System.out.println("Click");
+			System.out.println(new Point(towers.get(0).x,towers.get(0).y));
+			cursorPosX = e.getX();
+			cursorPosY = e.getY();
+			System.out.printf("%d %d",cursorPosX,cursorPosY);
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {}
+
+		@Override
+		public void mouseExited(MouseEvent e) {}
+
+	}
+
+	void removeHealth(int enemyIndex) {
+		//Remove health and destroy enemies that reach the last node
+		System.out.println("Ouchies");
+		enemies.remove(enemyIndex);
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
+	}
+	
+	void deleteEnemy(int i) {
+		enemies.remove(i);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+<<<<<<< HEAD
 		for (int i = 0; i < enemies.size(); i++) {
 			moveEnemies(i);
+=======
+		//Move the enemies and check if they reach the endpoint or get to 0 health
+		for (int i = 0 ; i < enemies.size() ; i++) {
+			int enemyIndex = enemies.get(i).moveEnemies(nodes,boxW,boxH,i);
+			if (enemyIndex >= 0) removeHealth(enemyIndex);
+			if (enemies.get(i).health == 0) deleteEnemy(i);
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 		}
 
+<<<<<<< HEAD
 		gamePanel.repaint();	
+=======
+		//TODO find out how to create indivdual firerates
+		
+
+		gamePanel.repaint();
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 	}
 
 	class Spawn extends Thread {
@@ -252,9 +334,30 @@ public class Main extends JFrame implements ActionListener {
 						}
 					}
 				}
+<<<<<<< HEAD
 				if (wave == 1) {
 					enemies.add(new Enemies(spawnX, spawnY, "medium"));
 				}
+=======
+				//TODO DEBUG remove later
+				enemies.add(new MediumEnemies(spawnX,spawnY));
+			}
+		}
+	}
+	
+	class Shoot extends Thread {
+		
+		int firerate;
+		
+		public void run() {
+			while (true) {
+				for (Tower t : towers) {
+					t.shoot(enemies);
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {}
+>>>>>>> branch 'master' of https://github.com/damadam541/GridDefense.git
 			}
 		}
 	}
