@@ -76,9 +76,11 @@ public class Main extends JFrame implements ActionListener {
 		timer.start();
 
 		//TODO Remove debug towers when done
-		towers.add(new RangeTower(4,5,10,10,boxW,boxH));
+		towers.add(new MeleeTower(4,5,10,10,boxW,boxH));
 		towers.add(new RangeTower(2,3,10,10,boxW,boxH));
 
+		new Spawn().start();
+		new Shoot().start();
 	}
 
 	void initBox() {
@@ -175,8 +177,6 @@ public class Main extends JFrame implements ActionListener {
 			levelSelect();
 			initBox();
 			createMap();
-			new Spawn().start();
-			new Shoot().start();
 		}
 
 		@Override
@@ -232,12 +232,17 @@ public class Main extends JFrame implements ActionListener {
 				//TODO Remove this later
 				g2.setColor(Color.RED);
 				g2.fillRect(t.x,t.y,5,5);
-				
+
 				g2.rotate(-t.angle,t.x+t.width/2,t.y+t.height/2);
 				if (cursorPosX >= t.x && cursorPosX <= t.x+t.width && cursorPosY >= t.y && cursorPosY <= t.y+t.height) {
 					g2.setColor(new Color(50,50,50,100));
 					g2.fill(t.radius);
 				}
+				if (t.fire == true) {
+					System.out.println("Fired");
+					t.fire = false;
+				}
+				
 			}
 
 		}
@@ -270,28 +275,23 @@ public class Main extends JFrame implements ActionListener {
 		System.out.println("Ouchies");
 		enemies.remove(enemyIndex);
 	}
-	
-	void deleteEnemy(int i) {
-		enemies.remove(i);
-	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//Move the enemies and check if they reach the endpoint or get to 0 health
 		for (int i = 0 ; i < enemies.size() ; i++) {
+			System.out.println("Enemy "+i+" "+enemies.get(i).health); //TODO Remove this
 			int enemyIndex = enemies.get(i).moveEnemies(nodes,boxW,boxH,i);
 			if (enemyIndex >= 0) removeHealth(enemyIndex);
-			if (enemies.get(i).health == 0) deleteEnemy(i);
+			if (enemies.get(i).health <= 0) enemies.remove(i);
 		}
-
-		//TODO find out how to create indivdual firerates
-		
 
 		gamePanel.repaint();
 	}
 
 	//Sets spawn coordinates for enemies
 	class Spawn extends Thread {
+		
 		public void run() {
 			//TODO change enemy spawn algorithm
 			while (enemies.size() < Math.pow(2, wave)) {
@@ -315,24 +315,29 @@ public class Main extends JFrame implements ActionListener {
 					}
 				}
 				//TODO DEBUG remove later
-				enemies.add(new MediumEnemies(spawnX,spawnY));
+				enemies.add(new FastEnemies(spawnX,spawnY));
 			}
 		}
+		
 	}
-	
+
 	class Shoot extends Thread {
-		
-		int firerate;
-		
+
 		public void run() {
+			
 			while (true) {
+				//Run shoot method
 				for (Tower t : towers) {
 					t.shoot(enemies);
+					try {
+						//Pause before running shoot method again
+						Thread.sleep(t.firerate);
+					} catch (InterruptedException e) {}
 				}
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {}
 			}
+			
 		}
+		
 	}
+	
 }
