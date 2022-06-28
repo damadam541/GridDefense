@@ -9,6 +9,7 @@ public class Enemies extends Rectangle {
 	final int height = 20;
 	int v;
 	int health;
+	int maxHealth;
 	int currentNode = 1;
 
 	Enemies(int x, int y){

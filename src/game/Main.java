@@ -2,6 +2,7 @@ package game;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -76,11 +77,11 @@ public class Main extends JFrame implements ActionListener {
 		timer.start();
 
 		//TODO Remove debug towers when done
-		towers.add(new MeleeTower(4,5,10,10,boxW,boxH));
+		towers.add(new CannonTower(4,5,10,10,boxW,boxH));
 		towers.add(new RangeTower(2,3,10,10,boxW,boxH));
 
 		new Spawn().start();
-		new Shoot().start();
+		//new Shoot().start();
 	}
 
 	void initBox() {
@@ -219,27 +220,30 @@ public class Main extends JFrame implements ActionListener {
 				}
 			}
 
-			//Draw Enemies
+			//Draw Enemies & Health bar
 			for (int i = 0 ; i < enemies.size() ; i++) {
 				Enemies temp = enemies.get(i);
+				g2.setColor(Color.WHITE);
 				g2.fillRect(temp.x,temp.y,temp.width,temp.height);
+				
+				g2.setColor(Color.decode("#fa3e3e"));
+				g2.setFont(new Font("Arial",Font.BOLD,12));
+				g2.drawString(Integer.toString(temp.health), temp.x, temp.y);
 			}
 
 			//Draw Tower
 			for (Tower t : towers) {
+				g2.setColor(Color.WHITE);
 				g2.rotate(t.angle,t.x+t.width/2,t.y+t.height/2);
 				g2.fillRect(t.x,t.y,t.width,t.height);
-				//TODO Remove this later
-				g2.setColor(Color.RED);
-				g2.fillRect(t.x,t.y,5,5);
-
+				
 				g2.rotate(-t.angle,t.x+t.width/2,t.y+t.height/2);
 				if (cursorPosX >= t.x && cursorPosX <= t.x+t.width && cursorPosY >= t.y && cursorPosY <= t.y+t.height) {
 					g2.setColor(new Color(50,50,50,100));
 					g2.fill(t.radius);
 				}
 				if (t.fire == true) {
-					System.out.println("Fired");
+					//Draw fire animation
 					t.fire = false;
 				}
 				
@@ -280,7 +284,7 @@ public class Main extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		//Move the enemies and check if they reach the endpoint or get to 0 health
 		for (int i = 0 ; i < enemies.size() ; i++) {
-			System.out.println("Enemy "+i+" "+enemies.get(i).health); //TODO Remove this
+			//System.out.println("Enemy "+i+" "+enemies.get(i).health); //TODO Remove this
 			int enemyIndex = enemies.get(i).moveEnemies(nodes,boxW,boxH,i);
 			if (enemyIndex >= 0) removeHealth(enemyIndex);
 			if (enemies.get(i).health <= 0) enemies.remove(i);
@@ -315,13 +319,13 @@ public class Main extends JFrame implements ActionListener {
 					}
 				}
 				//TODO DEBUG remove later
-				enemies.add(new FastEnemies(spawnX,spawnY));
+				enemies.add(new BigEnemies(spawnX,spawnY));
 			}
 		}
 		
 	}
 
-	class Shoot extends Thread {
+/*	class Shoot extends Thread {
 
 		public void run() {
 			
@@ -338,6 +342,6 @@ public class Main extends JFrame implements ActionListener {
 			
 		}
 		
-	}
+	}*/
 	
 }
