@@ -4,69 +4,75 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 public class Player extends JPanel {
 
-    Player player;
-    int health = 100;
-    int money = 100;
-    int coolDown = 0;
-    JButton btn, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9;
+	Player player;
+	int health = 100;
+	int money = 100;
+	int coolDown = 0;
+	JButton[] btn = new JButton[9];
+	ButtonListener click = new ButtonListener();
 
-    Player() {
-        btn = new JButton("");
-        btn.setActionCommand("0");
-        btn.setSize(20, 20);
-        btn1 = new JButton("");
-        btn1.setActionCommand("1");
-        btn1.setSize(20, 20);
-        btn2 = new JButton("2");
-        btn2.setActionCommand("2");
-        btn2.setSize(20, 20);
-        btn3 = new JButton("3");
-        btn3.setActionCommand("3");
-        btn3.setSize(20, 20);
-        btn4 = new JButton("4");
-        btn4.setActionCommand("4");
-        btn4.setSize(20, 20);
+	Player() {
 
-        this.setLayout(new BorderLayout());
-        this.setBackground(Color.BLACK);
-        this.setPreferredSize(new Dimension(400, 720));
-        this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
+		for (int i = 0 ; i < btn.length ; i++) {
+			btn[i] = new JButton();
+		}
 
-        setupGUI();
+		this.setLayout(new BorderLayout());
+		this.setBackground(Color.BLACK);
+		this.setPreferredSize(new Dimension(400, 720));
+		this.setBorder(BorderFactory.createLineBorder(Color.WHITE, 5));
 
-        this.setVisible(true);
+		setupGUI();
 
-    }
+		this.setVisible(true);
 
-    void setupGUI() {
+	}
 
-        GridLayout buttonLayout = new GridLayout(2, 0);
-        JLabel moneyLabel = new JLabel("Money: $" + money, JLabel.CENTER);
+	void setupGUI() {
+		
+		for (int i = 0 ; i < btn.length ; i++) {
+			btn[i].setActionCommand(Integer.toString(i));
+			btn[i].setSize(20,20);
+			btn[i].addActionListener(click);
+		}
 
-        this.setLayout(buttonLayout);
+		GridLayout buttonLayout = new GridLayout(2, 0);
+		JLabel moneyLabel = new JLabel("Money: $" + money, JLabel.CENTER);
 
-        this.add(btn);
-        btn.setText("<html><body>Melee Tower<br>Cost: $100</body></html>");
-        this.add(btn1);
-        btn1.setText("<html><body>Ranged Tower<br>Cost: $150</body></html>");
-        this.add(btn2);
-        btn2.setText("<html><body>Blank Tower<br>Cost: $x</body></html>");
-        this.add(btn3);
-        btn3.setText("<html><body>Blank Tower<br>Cost: $x</body></html>");
-        this.add(btn4);
-        btn4.setText("<html><body>Blank Tower<br>Cost: $x</body></html>");
-        this.add(moneyLabel);
-        moneyLabel.setForeground(Color.WHITE);
+		this.setLayout(buttonLayout);
 
-    }
+		this.add(btn[0]);
+		btn[0].setText("<html><body>Melee Tower<br>Cost: $100</body></html>");
+		this.add(btn[1]);
+		btn[1].setText("<html><body>Ranged Tower<br>Cost: $150</body></html>");
+		this.add(btn[2]);
+		btn[2].setText("<html><body>Blank Tower<br>Cost: $x</body></html>");
+		this.add(btn[3]);
+		btn[3].setText("<html><body>Blank Tower<br>Cost: $x</body></html>");
+		this.add(btn[4]);
+		btn[4].setText("<html><body>Blank Tower<br>Cost: $x</body></html>");
+		this.add(moneyLabel);
+		moneyLabel.setForeground(Color.WHITE);
+
+	}
+
+	class ButtonListener implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+
+	}
 
 }
