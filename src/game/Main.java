@@ -48,6 +48,11 @@ public class Main extends JFrame implements ActionListener {
 	int cursorPosX = 0;
 	int cursorPosY = 0;
 
+	int gridPosX = 0;
+	int gridPosY = 0;
+
+	static int towerSelect = -1;
+
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
@@ -170,6 +175,10 @@ public class Main extends JFrame implements ActionListener {
 
 	}
 
+	public void getSelectTower(int towerSelect) {
+
+	}
+
 	private class PlayingField extends JPanel implements MouseListener {
 
 		PlayingField(){
@@ -225,7 +234,7 @@ public class Main extends JFrame implements ActionListener {
 				Enemies temp = enemies.get(i);
 				g2.setColor(Color.WHITE);
 				g2.fillRect(temp.x,temp.y,temp.width,temp.height);
-				
+
 				g2.setColor(Color.decode("#fa3e3e"));
 				g2.setFont(new Font("Arial",Font.BOLD,12));
 				g2.drawString(Integer.toString(temp.health), temp.x, temp.y);
@@ -236,7 +245,7 @@ public class Main extends JFrame implements ActionListener {
 				g2.setColor(Color.WHITE);
 				g2.rotate(t.angle,t.x+t.width/2,t.y+t.height/2);
 				g2.fillRect(t.x,t.y,t.width,t.height);
-				
+
 				g2.rotate(-t.angle,t.x+t.width/2,t.y+t.height/2);
 				if (cursorPosX >= t.x && cursorPosX <= t.x+t.width && cursorPosY >= t.y && cursorPosY <= t.y+t.height) {
 					g2.setColor(new Color(50,50,50,100));
@@ -246,7 +255,7 @@ public class Main extends JFrame implements ActionListener {
 					//Draw fire animation
 					t.fire = false;
 				}
-				
+
 			}
 
 		}
@@ -257,10 +266,13 @@ public class Main extends JFrame implements ActionListener {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			System.out.println("Click");
-			System.out.println(new Point(towers.get(0).x,towers.get(0).y));
 			cursorPosX = e.getX();
 			cursorPosY = e.getY();
-			System.out.printf("%d %d",cursorPosX,cursorPosY);
+			gridPosX = cursorPosX/boxW;
+			gridPosY = cursorPosY/boxH;
+			System.out.printf("%d %d%n",cursorPosX,cursorPosY);
+			System.out.println(towerSelect);
+			Player.placeTower(towers,gridPosX,gridPosY,boxW,boxH);
 		}
 
 		@Override
@@ -295,7 +307,7 @@ public class Main extends JFrame implements ActionListener {
 
 	//Sets spawn coordinates for enemies
 	class Spawn extends Thread {
-		
+
 		public void run() {
 			//TODO change enemy spawn algorithm
 			while (enemies.size() < Math.pow(2, wave)) {
@@ -322,13 +334,17 @@ public class Main extends JFrame implements ActionListener {
 				enemies.add(new BigEnemies(spawnX,spawnY));
 			}
 		}
-		
+
 	}
 
-/*	class Shoot extends Thread {
+	public static void getTowerSelect(int towerSelect) {
+		Main.towerSelect = towerSelect;
+	}
+
+	/*	class Shoot extends Thread {
 
 		public void run() {
-			
+
 			while (true) {
 				//Run shoot method
 				for (Tower t : towers) {
@@ -339,9 +355,9 @@ public class Main extends JFrame implements ActionListener {
 					} catch (InterruptedException e) {}
 				}
 			}
-			
+
 		}
-		
+
 	}*/
-	
+
 }
